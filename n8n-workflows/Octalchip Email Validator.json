@@ -1,0 +1,99 @@
+{
+  "name": "Octalchip Email Validator",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": ""
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "45f62611-539b-4aa9-9c8f-9b2ff6ed73de",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "Gh6szlVp1P1Sa0b7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sheetId": "YOUR_GOOGLE_SHEET_ID"
+      },
+      "type": "CUSTOM.emailValidator",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "bbc21c29-2591-4393-a35d-2f281d141b92",
+      "name": "Email Validator",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "c2tNfLLsR2VttI34",
+          "name": "Google Sheets account 2"
+        },
+        "emailValidatorApi": {
+          "id": "3KEYqqIoLZSlBLk4",
+          "name": "Email Validator account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Email Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Validator": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1b78c11a-f135-48e3-a4c0-392a758b653e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b100ddf0deaaf51e5d95ede7718249b9d69ee44e36ef47f4f231ba1beaeb07e2"
+  },
+  "id": "SWMlTR2LuvzCdkjz",
+  "tags": []
+}

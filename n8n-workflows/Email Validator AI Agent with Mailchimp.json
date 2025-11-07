@@ -1,0 +1,370 @@
+{
+  "name": "Email Validator AI Agent with Mailchimp",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.octalchip.com/emailvalidator",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"emails\": {{ JSON.stringify($items().map(item => item.json.email)) }},\n  \"validationType\": \"bulk\"\n}\n",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        320,
+        -16
+      ],
+      "id": "702b70c2-d71d-471b-a7f2-428136da39b3",
+      "name": "Validate Email",
+      "executeOnce": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "VnGPP1jsCvb3on3e",
+          "name": "Mailvalidator AI Agent account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $json.email }}",
+            "status": "={{ $json.status }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        -16
+      ],
+      "id": "d3f5547a-002e-4504-9496-3b21a825fb0e",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "c2tNfLLsR2VttI34",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "emailResults",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -16
+      ],
+      "id": "cb3397da-6598-44b9-a2f8-8bd9e667814b",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "content": "🧠 MailValidator Setup Instructions\n\n1️⃣ Go to: https://mailvalidator.octalchip.com/  \n2️⃣ Create your free account (Sign Up).\n\n3️⃣ After login, open: [API Documentation](https://mailvalidator.octalchip.com/docs)  \n4️⃣ Generate your API Key there.\n\n5️⃣ Copy that API key and paste it into the “MailValidator” node inside n8n  \n   → under the credentials section.\n\n6️⃣ Create a Google  Sheet connected via Google Sheets node\n   with exactly **2 columns**:\n      • email  \n      • status  \n\n   Example:\n   | email               | status |\n   | test@mail.com        |        |\n   | demo@example.com     |        |\n\n7️⃣ When you run or activate the workflow,  \n   it will automatically validate each email and  \n   update the “status” column accordingly.\n\n🔄 Tip: Once setup is complete, activate the workflow to automatically validate new emails whenever they’re added to your sheet.\n",
+        "height": 576,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        -176
+      ],
+      "id": "ba2dc791-9d73-4c22-9456-ebe5a4202a29",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "id",
+          "cachedResultName": "Your Sheet Name",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": ""
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        -32
+      ],
+      "id": "7bd7dddf-5994-4dad-b900-7ec1b1fdfb19",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "Gh6szlVp1P1Sa0b7",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        -32
+      ],
+      "id": "de260337-0e82-45b2-a882-5751c8c51757",
+      "name": "Split In Batches"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        928,
+        -16
+      ],
+      "id": "150c469a-c2e3-4340-85cb-72f542592751",
+      "name": "Wait",
+      "webhookId": "9106ce0a-9df5-4e4c-83f5-fea05e391215"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "50135fea-f04e-49d7-9cc4-d1ebc45cfc93",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "valid",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        208
+      ],
+      "id": "1a51b60f-e580-434a-aa0b-f5ae85689c7d",
+      "name": "Check Valid Emails"
+    },
+    {
+      "parameters": {
+        "list": "YOUR_MAILCHIMP_LIST_ID",
+        "email": "={{$json[\"email\"]}}",
+        "status": "subscribed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mailchimp",
+      "typeVersion": 1,
+      "position": [
+        944,
+        192
+      ],
+      "id": "4ee6f706-06a5-4f8d-8cf7-fff744abb262",
+      "name": "Add to Mailchimp",
+      "credentials": {
+        "mailchimpApi": {
+          "id": "Ual9GLdm08T6XnFz",
+          "name": "Mailchimp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Validate Email": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Check Valid Emails",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Validate Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Valid Emails": {
+      "main": [
+        [
+          {
+            "node": "Add to Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1b4354a1-055e-4979-b37d-4c0a0e728ace",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b100ddf0deaaf51e5d95ede7718249b9d69ee44e36ef47f4f231ba1beaeb07e2"
+  },
+  "id": "0P9AWeESTdOxt4sw",
+  "tags": []
+}
