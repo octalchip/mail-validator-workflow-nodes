@@ -143,10 +143,8 @@ This workflow uses the custom Email Validator node, which requires two credentia
 3. Click **"Create New Credential"** or select existing
 4. Choose **"Email Validator API"** from the credential type dropdown
 5. Configure the credential:
-   - **Authentication Type:** Choose either:
-     - **JWT Bearer Token** - Use your Supabase Auth JWT token
-     - **API Key** - Use your API key (format: `evapi_...`)
-   - Enter your credentials based on the selected authentication type
+   - **Authentication Type:** Select **API Key**
+   - **API Key:** Enter your API key (format: `evapi_...`)
 6. Click **"Save"**
 
 #### 2. Google Sheets OAuth2 Credential (Second)
